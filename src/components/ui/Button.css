@@ -1,0 +1,129 @@
+.ui-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+}
+
+.ui-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Variants */
+.ui-button--primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--text-on-primary);
+    box-shadow: 0 4px 14px rgba(98, 0, 234, 0.3);
+}
+
+.ui-button--primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(98, 0, 234, 0.4);
+}
+
+.ui-button--secondary {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
+    color: var(--text-on-primary);
+    box-shadow: 0 4px 14px rgba(0, 176, 255, 0.3);
+}
+
+.ui-button--secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 176, 255, 0.4);
+}
+
+.ui-button--outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.ui-button--outline:hover {
+    background: rgba(98, 0, 234, 0.05);
+}
+
+.ui-button--ghost {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.ui-button--ghost:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+.ui-button--danger {
+    background: #ff1744;
+    color: white;
+    box-shadow: 0 4px 14px rgba(255, 23, 68, 0.3);
+}
+
+.ui-button--danger:hover {
+    background: #d50000;
+    box-shadow: 0 6px 20px rgba(255, 23, 68, 0.4);
+}
+
+/* Sizes */
+.ui-button--sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    height: 32px;
+}
+
+.ui-button--md {
+    padding: 10px 20px;
+    font-size: 1rem;
+    height: 44px;
+}
+
+.ui-button--lg {
+    padding: 14px 28px;
+    font-size: 1.125rem;
+    height: 56px;
+}
+
+/* Modifiers */
+.ui-button--full-width {
+    width: 100%;
+    display: flex;
+}
+
+.ui-button__icon-left {
+    margin-right: 8px;
+    display: flex;
+}
+
+.ui-button__icon-right {
+    margin-left: 8px;
+    display: flex;
+}
+
+/* Spinner */
+.ui-button__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    position: absolute;
+}
+
+.ui-button--loading .ui-button__content {
+    opacity: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
