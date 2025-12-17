@@ -1,13 +1,16 @@
 import { useQuery } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { ME_CHARACTER_QUERY } from '../../graphql/character.queries';
+import { GET_TOWER_FLOORS } from '../../graphql/tower.queries';
 import { CharacterCreateForm } from '../../components/Character/CharacterCreateForm';
 import { CharacterCard } from '../../components/Character/CharacterCard';
 import { PlayerLayout } from '../../components/layout/PlayerLayout';
 import { AffinityList } from '../../components/Affinity/AffinityList';
 
 export function PlayerDashboardPage() {
-    // const { user } = useAuth();
+    const navigate = useNavigate();
     const { data, loading, error } = useQuery(ME_CHARACTER_QUERY);
+    const { data: towerData } = useQuery(GET_TOWER_FLOORS);
 
     if (loading) {
         return (
@@ -31,6 +34,21 @@ export function PlayerDashboardPage() {
 
     const character = data?.meCharacter;
 
+    const getCharacterFloor = () => {
+        if (!towerData?.towerFloors || !character) return null;
+        return towerData.towerFloors.find(
+            (floor: any) => floor.schoolYear === character.schoolYear
+        );
+    };
+
+    const handleExploreFloor = () => {
+        const floor = getCharacterFloor();
+        if (floor && character?.id) {
+            localStorage.setItem('currentCharacterId', character.id);
+            navigate(`/tower/${floor.id}`);
+        }
+    };
+
     return (
         <PlayerLayout>
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -52,6 +70,61 @@ export function PlayerDashboardPage() {
             ) : (
                 <div className="d-flex flex-column gap-4">
                     <CharacterCard character={character} />
+
+                    {/* Torre de Exploração */}
+                    <div className="panel border-start border-4 border-purple">
+                        <h3 className="h5 section-title mb-3">
+                            🏰 Torre de Exploração
+                        </h3>
+                        <p className="text-muted small mb-3">
+                            Explore os andares da torre, enfrente inimigos e complete quizzes para evoluir seu personagem!
+                        </p>
+                        <div className="d-flex gap-3 align-items-center flex-wrap">
+                            <button
+                                onClick={handleExploreFloor}
+                                disabled={!getCharacterFloor()}
+                                className={`btn ${getCharacterFloor() ? 'btn-purple' : 'btn-secondary'}`}
+                                style={{
+                                    minWidth: '200px',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                🏰 Explorar Torre
+                            </button>
+                            {getCharacterFloor() && (
+                                <div className="badge bg-light text-dark border px-3 py-2" style={{ fontSize: '14px' }}>
+                                    📍 {getCharacterFloor().name}
+                                </div>
+                            )}
+                        </div>
+                        {!getCharacterFloor() && (
+                            <div className="alert alert-warning mt-3 mb-0 small">
+                                ⚠️ Nenhum andar disponível para o seu ano escolar no momento.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Missões Stealth */}
+                    <div className="panel border-start border-4 border-info">
+                        <h3 className="h5 section-title mb-3">
+                            🕵️ Missões Stealth
+                        </h3>
+                        <p className="text-muted small mb-3">
+                            Teste suas habilidades furtivas em missões de infiltração! Evite guardas, colete pacotes e escape sem ser detectado.
+                        </p>
+                        <button
+                            onClick={() => navigate('/player/stealth-missions')}
+                            className="btn btn-info"
+                            style={{
+                                minWidth: '200px',
+                                fontSize: '16px',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            🎮 Jogar Stealth Missions
+                        </button>
+                    </div>
 
                     {/* Afinidades Acadêmicas */}
                     <div className="panel">

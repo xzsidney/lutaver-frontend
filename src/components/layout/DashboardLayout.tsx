@@ -33,7 +33,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
                     <nav className="dashboard-layout__nav">
                         {user?.role === 'PLAYER' && (
                             <>
-                                <Link to="/player/dashboard">Dashboard</Link>
+                                <Link to="/player">Dashboard</Link>
                                 <Link to="/player/shop">Loja</Link>
                                 <Link to="/player/inventory">Inventário</Link>
                                 <Link to="/characters">Personagens</Link>

@@ -30,9 +30,8 @@ export function CharacterCreateForm({ onSuccess }: { onSuccess?: () => void }) {
         LUCK: 1,
     });
 
-    // Estado do nome e schoolYear (pré-preenchido)
+    // Estado do nome
     const [characterName, setCharacterName] = useState('');
-    const [schoolYear, setSchoolYear] = useState('FUNDAMENTAL_1_1');
 
     const [createCharacter, { loading, error }] = useMutation(CREATE_CHARACTER_MUTATION, {
         refetchQueries: [{ query: ME_CHARACTER_QUERY }],
@@ -67,11 +66,6 @@ export function CharacterCreateForm({ onSuccess }: { onSuccess?: () => void }) {
             return;
         }
 
-        if (!schoolYear) {
-            alert('Selecione um ano escolar!');
-            return;
-        }
-
         const attributes = Object.entries(points).map(([code, pts]) => ({
             code,
             points: pts,
@@ -82,7 +76,7 @@ export function CharacterCreateForm({ onSuccess }: { onSuccess?: () => void }) {
                 variables: {
                     input: {
                         name: characterName,
-                        schoolYear: schoolYear,
+                        schoolYear: 'FUNDAMENTAL_1_1',
                         attributes,
                     },
                 },
@@ -91,27 +85,13 @@ export function CharacterCreateForm({ onSuccess }: { onSuccess?: () => void }) {
             if (onSuccess) {
                 onSuccess();
             } else {
-                navigate('/player/dashboard');
+                navigate('/player/character');
             }
         } catch (err) {
             console.error('Erro ao criar personagem:', err);
         }
     };
 
-    const schoolYears = [
-        { value: 'FUNDAMENTAL_1_1', label: '1º ano - Fundamental I' },
-        { value: 'FUNDAMENTAL_1_2', label: '2º ano - Fundamental I' },
-        { value: 'FUNDAMENTAL_1_3', label: '3º ano - Fundamental I' },
-        { value: 'FUNDAMENTAL_1_4', label: '4º ano - Fundamental I' },
-        { value: 'FUNDAMENTAL_1_5', label: '5º ano - Fundamental I' },
-        { value: 'FUNDAMENTAL_2_6', label: '6º ano - Fundamental II' },
-        { value: 'FUNDAMENTAL_2_7', label: '7º ano - Fundamental II' },
-        { value: 'FUNDAMENTAL_2_8', label: '8º ano - Fundamental II' },
-        { value: 'FUNDAMENTAL_2_9', label: '9º ano - Fundamental II' },
-        { value: 'HIGH_SCHOOL_1', label: '1º ano - Ensino Médio' },
-        { value: 'HIGH_SCHOOL_2', label: '2º ano - Ensino Médio' },
-        { value: 'HIGH_SCHOOL_3', label: '3º ano - Ensino Médio' },
-    ];
 
     return (
         <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
@@ -152,30 +132,20 @@ export function CharacterCreateForm({ onSuccess }: { onSuccess?: () => void }) {
                     <label htmlFor="schoolYear" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
                         Ano Escolar
                     </label>
-                    <select
-                        id="schoolYear"
-                        value={schoolYear}
-                        onChange={(e) => setSchoolYear(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '12px',
-                            fontSize: '16px',
-                            border: '2px solid #dee2e6',
-                            borderRadius: '4px',
-                        }}
-                    >
-                        <option value="">Selecione...</option>
-                        {schoolYears.map((year) => (
-                            <option key={year.value} value={year.value}>
-                                {year.label}
-                            </option>
-                        ))}
-                    </select>
-                    {!schoolYear && (
-                        <span style={{ color: '#999', fontSize: '14px', marginTop: '5px', display: 'block' }}>
-                            Selecione um ano escolar
-                        </span>
-                    )}
+                    <div style={{
+                        width: '100%',
+                        padding: '12px',
+                        fontSize: '16px',
+                        border: '2px solid #dee2e6',
+                        borderRadius: '4px',
+                        backgroundColor: '#f8f9fa',
+                        color: '#495057',
+                    }}>
+                        1º ano - Fundamental I
+                    </div>
+                    <span style={{ color: '#6c757d', fontSize: '14px', marginTop: '5px', display: 'block' }}>
+                        ℹ️ Todos os personagens começam no 1º ano
+                    </span>
                 </div>
 
                 {/* Distribuição de Pontos */}

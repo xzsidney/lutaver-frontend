@@ -6,35 +6,38 @@
   --secondary-color: #00b0ff;
   --secondary-light: #69e2ff;
   --secondary-dark: #0081cb;
-  
+  --purple-color: #6f42c1;
+  --purple-light: #8b5fd9;
+  --purple-dark: #5a32a3;
+
   /* Backgrounds */
   --bg-color: #f8f9fa;
   --bg-paper: #ffffff;
   --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   --bg-glass: rgba(255, 255, 255, 0.7);
-  
+
   /* Text */
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
   --text-on-primary: #ffffff;
-  
+
   /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
-  
+
   /* Borders */
   --border-radius-sm: 8px;
   --border-radius-md: 12px;
   --border-radius-lg: 20px;
   --border-color: rgba(0, 0, 0, 0.1);
-  
+
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-glow: 0 0 20px rgba(98, 0, 234, 0.3);
 
   /* Transitions */
@@ -79,8 +82,41 @@ button {
   cursor: pointer;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--text-primary);
   font-weight: 700;
   line-height: 1.2;
+}
+
+/* Purple Button */
+.btn-purple {
+  background-color: var(--purple-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  transition: var(--transition-normal);
+}
+
+.btn-purple:hover:not(:disabled) {
+  background-color: var(--purple-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-purple:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Purple Border */
+.border-purple {
+  border-color: var(--purple-color) !important;
 }

@@ -1,0 +1,80 @@
+/* Activity Panel - Tamanho Compacto */
+.classroom-canvas-container .activity-panel {
+    position: absolute !important;
+    top: -60px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(20, 20, 40, 0.98) 100%) !important;
+    border: 2px solid #ffd700 !important;
+    border-radius: 12px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4),
+        0 0 40px rgba(255, 215, 0, 0.2);
+    max-width: 400px;
+    z-index: 9999 !important;
+    animation: slideDown 0.3s ease-out;
+}
+
+.activity-icon-large {
+    font-size: 28px !important;
+    flex-shrink: 0;
+}
+
+.activity-text h3 {
+    margin: 0 0 3px 0 !important;
+    color: #ffd700 !important;
+    font-size: 14px !important;
+    white-space: nowrap;
+}
+
+.activity-text p {
+    margin: 0 !important;
+    opacity: 0.9;
+    font-size: 11px !important;
+    display: none;
+}
+
+.activity-type {
+    display: inline-block !important;
+    padding: 2px 8px !important;
+    background: rgba(102, 126, 234, 0.3);
+    border: 1px solid rgba(102, 126, 234, 0.5);
+    border-radius: 8px;
+    font-size: 10px !important;
+    color: #667eea;
+}
+
+.start-button {
+    padding: 8px 16px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.start-button:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.6) !important;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}

@@ -52,11 +52,17 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                 <NavLink to="/admin/characters" className={({ isActive }) => `menu-link ${isActive ? 'active' : ''}`}>
                                     <span className="icon-chip chip-green">C</span>Personagens
                                 </NavLink>
+                                <NavLink to="/admin/npcs" className={({ isActive }) => `menu-link ${isActive ? 'active' : ''}`}>
+                                    <span className="icon-chip chip-purple">N</span>NPCs
+                                </NavLink>
                                 <NavLink to="/admin/disciplines" className={({ isActive }) => `menu-link ${isActive ? 'active' : ''}`}>
                                     <span className="icon-chip chip-yellow">Di</span>Disciplinas
                                 </NavLink>
                                 <NavLink to="/admin/quizzes" className={({ isActive }) => `menu-link ${isActive ? 'active' : ''}`}>
                                     <span className="icon-chip chip-blue">Q</span>Quizzes
+                                </NavLink>
+                                <NavLink to="/admin/questions" className={({ isActive }) => `menu-link ${isActive ? 'active' : ''}`}>
+                                    <span className="icon-chip chip-purple">Qu</span>Questões
                                 </NavLink>
                                 <NavLink to="/admin/items" className={({ isActive }) => `menu-link ${isActive ? 'active' : ''}`}>
                                     <span className="icon-chip chip-green">I</span>Itens

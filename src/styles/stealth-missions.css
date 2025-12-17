@@ -1,0 +1,265 @@
+/* =====================
+   STEALTH MISSIONS GAME STYLES
+===================== */
+
+.stealth-game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #050a14;
+}
+
+.stealth-game-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* =====================
+   HUD
+===================== */
+.stealth-game-container .hud {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px;
+    background: rgba(6, 11, 25, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    font-size: 14px;
+    line-height: 1.5;
+    min-width: 280px;
+    max-width: 320px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.3s;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .stealth-game-container .hud {
+        top: 70px;
+        min-width: 260px;
+        max-width: 90vw;
+        font-size: 12px;
+        padding: 12px;
+    }
+}
+
+.stealth-game-container .hud.active {
+    display: block;
+}
+
+.stealth-game-container .hud-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stealth-game-container .title {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.stealth-game-container .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.stealth-game-container .label {
+    color: #94a3b8;
+}
+
+.stealth-game-container .value {
+    font-weight: 600;
+}
+
+.stealth-game-container .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.stealth-game-container .status-badge.ok {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.stealth-game-container .status-badge.bad {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* =====================
+   TOAST
+===================== */
+.stealth-game-container .toast-container {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.stealth-game-container .toast {
+    padding: 10px 16px;
+    background: rgba(16, 185, 129, 0.9);
+    color: #fff;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stealth-game-container .toast.bad {
+    background: rgba(239, 68, 68, 0.9);
+}
+
+.stealth-game-container .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =====================
+   OVERLAYS (MENU / WIN)
+===================== */
+.stealth-game-container .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 10, 20, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 50;
+}
+
+.stealth-game-container .overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.stealth-game-container .overlay h1 {
+    font-size: 48px;
+    margin: 0 0 16px;
+    background: linear-gradient(135deg, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+}
+
+.stealth-game-container .level-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.stealth-game-container .level-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 140px;
+}
+
+.stealth-game-container .level-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    border-color: #10b981;
+}
+
+.stealth-game-container .level-card h3 {
+    margin: 0 0 8px;
+    color: #fff;
+}
+
+.stealth-game-container .level-card p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.stealth-game-container .btn {
+    padding: 12px 24px;
+    background: #10b981;
+    color: #050a14;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: transform 0.1s, filter 0.2s;
+}
+
+.stealth-game-container .btn:hover {
+    filter: brightness(1.1);
+}
+
+.stealth-game-container .btn:active {
+    transform: scale(0.96);
+}
+
+/* =====================
+   CONTROLS HINT
+===================== */
+.stealth-game-container .controls-hint {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    color: #94a3b8;
+    font-size: 12px;
+    text-align: right;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .stealth-game-container .controls-hint {
+        bottom: 10px;
+        right: 10px;
+        font-size: 10px;
+    }
+}
+
+.stealth-game-container kbd {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #e2e8f0;
+}

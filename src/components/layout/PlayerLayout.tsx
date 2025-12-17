@@ -26,7 +26,10 @@ export function PlayerLayout({ children }: PlayerLayoutProps) {
 
                         <div className="d-none d-md-flex">
                             <NavLink to="/player" end className={({ isActive }) => `nav-link-game ${isActive ? 'active' : ''}`}>
-                                🏠 Home
+                                👤 Minha Conta
+                            </NavLink>
+                            <NavLink to="/player/character" className={({ isActive }) => `nav-link-game ${isActive ? 'active' : ''}`}>
+                                🎮 Personagem
                             </NavLink>
                             <NavLink to="/player/quizzes" className={({ isActive }) => `nav-link-game ${isActive ? 'active' : ''}`}>
                                 ⚡ Quiz

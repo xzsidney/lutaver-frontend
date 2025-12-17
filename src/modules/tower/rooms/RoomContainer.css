@@ -1,0 +1,191 @@
+.room-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    color: white;
+    overflow: hidden;
+}
+
+.room-header {
+    padding: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.room-header h1 {
+    margin: 0 0 10px 0;
+    color: #ffd700;
+}
+
+.room-description {
+    margin: 10px 0 0 0;
+    opacity: 0.8;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background: rgba(102, 126, 234, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: rgba(102, 126, 234, 1);
+    transform: translateX(-5px);
+}
+
+.room-map {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.room-map-content {
+    position: relative;
+    background: rgba(26, 26, 46, 0.8);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+}
+
+.player-marker {
+    position: absolute;
+    font-size: 32px;
+    transform: translate(-50%, -50%);
+    cursor: default;
+    z-index: 10;
+}
+
+.activity-marker {
+    position: absolute;
+    font-size: 32px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+
+.activity-marker:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.activity-marker.selected {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+}
+
+.activity-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.95);
+    border-top: 2px solid #ffd700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.activity-info h3 {
+    margin: 0 0 10px 0;
+    color: #ffd700;
+}
+
+.activity-info p {
+    margin: 5px 0;
+}
+
+.start-activity-button {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-activity-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+}
+
+.room-loading {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    color: white;
+}
+
+.room-error {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+.error-content {
+    text-align: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ff6b6b;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.error-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #ff6b6b;
+}
+
+.error-message {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #ffffff;
+}
+
+.error-content .back-button {
+    position: static;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.error-content .back-button:hover {
+    transform: scale(1.05);
+}

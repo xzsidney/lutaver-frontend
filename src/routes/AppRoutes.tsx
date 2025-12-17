@@ -1,10 +1,8 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { HomePage } from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { AdminPage } from '../pages/AdminPage';
-import { PlayerPage } from '../pages/PlayerPage';
 import { TeacherPage } from '../pages/TeacherPage';
 import { Forbidden403Page } from '../pages/Forbidden403Page';
 import { RoleBasedRoute } from '../components/RoleBasedRoute';
@@ -12,13 +10,25 @@ import { ProtectedRoute } from '../components/ProtectedRoute';
 import { CharactersListPage } from '../pages/Characters/CharactersListPage';
 import { CharacterCreatePage } from '../pages/Characters/CharacterCreatePage';
 import { CharacterDetailPage } from '../pages/Characters/CharacterDetailPage';
+import { PlayerAccountPage } from '../pages/Player/PlayerAccountPage';
 import { PlayerDashboardPage } from '../pages/Player/PlayerDashboardPage';
 import { ShopPage } from '../pages/Player/ShopPage';
 import { InventoryPage } from '../pages/Player/InventoryPage';
+import { StealthMissionsPage } from '../pages/Player/StealthMissionsPage';
 import { AdminUsersPage } from '../pages/Admin/AdminUsersPage';
 import { AdminCharactersPage } from '../pages/Admin/AdminCharactersPage';
 import { AdminDisciplinesPage } from '../pages/Admin/AdminDisciplinesPage';
 import { AdminItemsPage } from '../pages/Admin/AdminItemsPage';
+import AdminNpcsPage from '../pages/Admin/npcs';
+import AdminQuestionsPage from '../pages/Admin/questions';
+import { QuizListPage } from '../pages/Player/quizzes/QuizListPage';
+import { QuizRunnerPage } from '../pages/Player/quizzes/QuizRunnerPage';
+import { QuizResultPage } from '../pages/Player/quizzes/QuizResultPage';
+import { AdminQuizzesPage } from '../pages/Admin/quizzes';
+import { AdminQuizCreateEditPage } from '../pages/Admin/quizzes/AdminQuizCreateEditPage';
+import { TowerExplorationPage } from '../pages/Tower/TowerExplorationPage';
+import { RoomContainer } from '../modules/tower/rooms/RoomContainer';
+import { ActivityContainer } from '../modules/tower/activities/ActivityContainer';
 
 export function AppRoutes() {
     return (
@@ -54,6 +64,14 @@ export function AppRoutes() {
                     }
                 />
                 <Route
+                    path="/admin/npcs"
+                    element={
+                        <RoleBasedRoute allowedRoles={['ADMIN']}>
+                            <AdminNpcsPage />
+                        </RoleBasedRoute>
+                    }
+                />
+                <Route
                     path="/admin/disciplines"
                     element={
                         <RoleBasedRoute allowedRoles={['ADMIN']}>
@@ -69,13 +87,54 @@ export function AppRoutes() {
                         </RoleBasedRoute>
                     }
                 />
+                <Route
+                    path="/admin/quizzes"
+                    element={
+                        <RoleBasedRoute allowedRoles={['ADMIN']}>
+                            <AdminQuizzesPage />
+                        </RoleBasedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/quizzes/new"
+                    element={
+                        <RoleBasedRoute allowedRoles={['ADMIN']}>
+                            <AdminQuizCreateEditPage />
+                        </RoleBasedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/quizzes/:id/edit"
+                    element={
+                        <RoleBasedRoute allowedRoles={['ADMIN']}>
+                            <AdminQuizCreateEditPage />
+                        </RoleBasedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/questions"
+                    element={
+                        <RoleBasedRoute allowedRoles={['ADMIN']}>
+                            <AdminQuestionsPage />
+                        </RoleBasedRoute>
+                    }
+                />
 
                 <Route
                     path="/player"
                     element={
                         <RoleBasedRoute allowedRoles={['PLAYER']}>
-                            <PlayerPage />
+                            <PlayerAccountPage />
                         </RoleBasedRoute>
+                    }
+                />
+
+                <Route
+                    path="/player/character"
+                    element={
+                        <ProtectedRoute>
+                            <PlayerDashboardPage />
+                        </ProtectedRoute>
                     }
                 />
 
@@ -114,15 +173,7 @@ export function AppRoutes() {
                     }
                 />
 
-                {/* Player Dashboard */}
-                <Route
-                    path="/player/dashboard"
-                    element={
-                        <ProtectedRoute>
-                            <PlayerDashboardPage />
-                        </ProtectedRoute>
-                    }
-                />
+                {/* Player Routes */}
                 <Route
                     path="/player/shop"
                     element={
@@ -139,6 +190,62 @@ export function AppRoutes() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/player/quizzes"
+                    element={
+                        <ProtectedRoute>
+                            <QuizListPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/player/quizzes/:id/play"
+                    element={
+                        <ProtectedRoute>
+                            <QuizRunnerPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/player/quizzes/:id/result"
+                    element={
+                        <ProtectedRoute>
+                            <QuizResultPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/player/stealth-missions"
+                    element={
+                        <ProtectedRoute>
+                            <StealthMissionsPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/player/room/:roomId"
+                    element={
+                        <ProtectedRoute>
+                            <RoomContainer />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/player/activity/:activityId"
+                    element={
+                        <ProtectedRoute>
+                            <ActivityContainer />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/tower/:floorId"
+                    element={
+                        <ProtectedRoute>
+                            <TowerExplorationPage />
+                        </ProtectedRoute>
+                    }
+                />
 
                 {/* Página 403 */}
                 <Route path="/403" element={<Forbidden403Page />} />
@@ -146,6 +253,6 @@ export function AppRoutes() {
                 {/* Rotas inválidas */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-        </BrowserRouter>
+        </BrowserRouter >
     );
 }

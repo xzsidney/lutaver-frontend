@@ -39,7 +39,7 @@ export function HomePage() {
 
                     <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
                         {isAuthenticated ? (
-                            <Link to="/player/dashboard">
+                            <Link to="/player">
                                 <Button size="lg" rightIcon="🚀">
                                     Continuar Jornada
                                 </Button>

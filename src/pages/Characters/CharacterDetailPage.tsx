@@ -2,6 +2,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { CHARACTER_QUERY, MY_CHARACTERS_QUERY } from '../../graphql/character.queries';
 import { DELETE_CHARACTER_MUTATION, RESTORE_HP_MUTATION } from '../../graphql/character.mutations';
+import { GET_TOWER_FLOORS } from '../../graphql/tower.queries';
 
 export function CharacterDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -10,6 +11,8 @@ export function CharacterDetailPage() {
     const { data, loading, error } = useQuery(CHARACTER_QUERY, {
         variables: { id },
     });
+
+    const { data: towerData } = useQuery(GET_TOWER_FLOORS);
 
     const [deleteCharacter] = useMutation(DELETE_CHARACTER_MUTATION, {
         refetchQueries: [{ query: MY_CHARACTERS_QUERY }],
@@ -55,6 +58,22 @@ export function CharacterDetailPage() {
         const amount = character.maxHp - character.currentHp;
         if (amount > 0) {
             await restoreHp({ variables: { characterId: id, amount } });
+        }
+    };
+
+    const getCharacterFloor = () => {
+        if (!towerData?.towerFloors || !character) return null;
+        return towerData.towerFloors.find(
+            (floor: any) => floor.schoolYear === character.schoolYear
+        );
+    };
+
+    const handleExploreFloor = () => {
+        const floor = getCharacterFloor();
+        if (floor && id) {
+            // Store character ID for tower page to use
+            localStorage.setItem('currentCharacterId', id);
+            navigate(`/tower/${floor.id}`);
         }
     };
 
@@ -182,6 +201,69 @@ export function CharacterDetailPage() {
                         <div style={{ fontSize: '14px', color: '#666' }}>Moedas</div>
                     </div>
                 </div>
+            </div>
+
+            {/* Game Actions Section */}
+            <div style={{
+                backgroundColor: 'white',
+                border: '2px solid #dee2e6',
+                borderRadius: '8px',
+                padding: '30px',
+                marginBottom: '20px'
+            }}>
+                <h2 style={{ marginTop: 0, marginBottom: '20px' }}>🎮 Ações do Jogo</h2>
+                <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                    <button
+                        onClick={handleExploreFloor}
+                        disabled={!getCharacterFloor()}
+                        style={{
+                            padding: '15px 30px',
+                            backgroundColor: getCharacterFloor() ? '#6f42c1' : '#ccc',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: getCharacterFloor() ? 'pointer' : 'not-allowed',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            transition: 'all 0.3s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px'
+                        }}
+                        onMouseOver={(e) => {
+                            if (getCharacterFloor()) {
+                                e.currentTarget.style.backgroundColor = '#5a32a3';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }
+                        }}
+                        onMouseOut={(e) => {
+                            if (getCharacterFloor()) {
+                                e.currentTarget.style.backgroundColor = '#6f42c1';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                            }
+                        }}
+                    >
+                        🏰 Explorar Torre
+                    </button>
+                    {getCharacterFloor() && (
+                        <div style={{
+                            padding: '15px',
+                            backgroundColor: '#f8f9fa',
+                            borderRadius: '8px',
+                            fontSize: '14px',
+                            color: '#666',
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}>
+                            📍 {getCharacterFloor().name}
+                        </div>
+                    )}
+                </div>
+                {!getCharacterFloor() && (
+                    <p style={{ marginTop: '10px', fontSize: '14px', color: '#999' }}>
+                        Nenhum andar disponível para este ano escolar.
+                    </p>
+                )}
             </div>
 
             {/* Attributes Section */}

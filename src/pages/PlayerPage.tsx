@@ -156,6 +156,17 @@ export function PlayerPage() {
                     <div className="col-md-3">
                         <div className="action-card">
                             <div className="d-flex align-items-center gap-2 mb-2">
+                                <div className="icon-chip chip-purple">🕵️</div>
+                                <strong>Missões Stealth</strong>
+                            </div>
+                            <p className="section-sub small">Teste suas habilidades furtivas.</p>
+                            <button className="btn btn-primary-br btn-br w-100" onClick={() => navigate('/player/stealth-missions')}>Jogar</button>
+                        </div>
+                    </div>
+
+                    <div className="col-md-3">
+                        <div className="action-card">
+                            <div className="d-flex align-items-center gap-2 mb-2">
                                 <div className="icon-chip chip-green">🎒</div>
                                 <strong>Inventário</strong>
                             </div>
