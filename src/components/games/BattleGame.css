@@ -1,0 +1,187 @@
+.battle-game {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #0b1220 0%, #1a1f3a 100%);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Header */
+.battle-header {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 30, 50, 0.8) 100%);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+    padding: 15px 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.battle-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.battle-info h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #ffd700;
+    text-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+}
+
+.turn-info {
+    display: flex;
+    gap: 20px;
+    font-size: 16px;
+}
+
+.phase-indicator {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.phase-indicator.player {
+    background: rgba(52, 211, 153, 0.2);
+    border: 2px solid #34d399;
+    color: #34d399;
+}
+
+.phase-indicator.enemy {
+    background: rgba(239, 68, 68, 0.2);
+    border: 2px solid #ef4444;
+    color: #ef4444;
+}
+
+/* Canvas Container */
+.battle-canvas-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+}
+
+.battle-canvas {
+    border: 3px solid rgba(255, 215, 0, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+/* Action Bar */
+.battle-actions {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 30, 50, 0.9) 100%);
+    border-top: 2px solid rgba(255, 215, 0, 0.3);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.character-stats {
+    flex: 1;
+}
+
+.character-stats h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #ffd700;
+}
+
+.stat-line {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: #cbd5e0;
+}
+
+.action-btn {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+/* Sidebar */
+.battle-sidebar {
+    position: fixed;
+    right: 20px;
+    top: 100px;
+    width: 250px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 30, 50, 0.9) 100%);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.team-section {
+    margin-bottom: 20px;
+}
+
+.team-section h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.char-card {
+    background: rgba(52, 211, 153, 0.1);
+    border: 2px solid rgba(52, 211, 153, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.char-card:hover {
+    background: rgba(52, 211, 153, 0.2);
+    border-color: rgba(52, 211, 153, 0.5);
+    transform: translateX(-3px);
+}
+
+.char-card.selected {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: #ffd700;
+}
+
+.char-card.enemy {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.char-card.enemy:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.hp-text {
+    font-size: 12px;
+    color: #cbd5e0;
+}

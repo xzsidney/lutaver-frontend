@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { gql } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 import { StealthMissionsGame } from '../../../components/games/StealthMissionsGame';
+import { BattleGame } from '../../../components/games/BattleGame';
 import './ActivityContainer.css';
 
 const GET_ACTIVITY = gql`
@@ -47,6 +47,101 @@ export const ActivityContainer: React.FC = () => {
 
     const activity = data.activity;
 
+    // Render appropriate component based on activity type
+    function renderActivityByType(activity: any) {
+        switch (activity.type) {
+            case 'MISSION':
+                return <StealthMissionsGame />;
+
+            case 'BATTLE':
+                return <BattleGame />;
+
+            case 'QUIZ':
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">📝</div>
+                        <h2>Quiz</h2>
+                        <p>Sistema de Quiz em desenvolvimento...</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+
+            case 'STUDY':
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">📚</div>
+                        <h2>Estudo</h2>
+                        <p>Sistema de Estudo em desenvolvimento...</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+
+            case 'SHOP':
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">🛒</div>
+                        <h2>Loja</h2>
+                        <p>Sistema de Loja em desenvolvimento...</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+
+            case 'HEAL':
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">💊</div>
+                        <h2>Cura</h2>
+                        <p>Sistema de Cura em desenvolvimento...</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+
+            case 'EVENT':
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">📋</div>
+                        <h2>Evento</h2>
+                        <p>Sistema de Eventos em desenvolvimento...</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+
+            case 'BOSS_FIGHT':
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">👨‍🏫</div>
+                        <h2>Boss Fight</h2>
+                        <p>Sistema de Boss Fight em desenvolvimento...</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+
+            default:
+                return (
+                    <div className="activity-placeholder">
+                        <div className="placeholder-icon">❓</div>
+                        <h2>Atividade Desconhecida</h2>
+                        <p>Tipo de atividade não reconhecido.</p>
+                        <button onClick={handleBack} className="back-button">
+                            Voltar
+                        </button>
+                    </div>
+                );
+        }
+    }
+
     return (
         <div className="activity-container">
             <div className="activity-header">
@@ -69,86 +164,3 @@ export const ActivityContainer: React.FC = () => {
         </div>
     );
 };
-
-function renderActivityByType(activity: any) {
-    switch (activity.type) {
-        case 'MISSION':
-            return <StealthMissionsGame />;
-        case 'QUIZ':
-            return <QuizPlaceholder activity={activity} />;
-        case 'BATTLE':
-            return <BattlePlaceholder activity={activity} />;
-        case 'STUDY':
-            return <StudyPlaceholder activity={activity} />;
-        case 'SHOP':
-            return <ShopPlaceholder activity={activity} />;
-        case 'HEAL':
-            return <HealPlaceholder activity={activity} />;
-        case 'EVENT':
-            return <EventPlaceholder activity={activity} />;
-        case 'BOSS_FIGHT':
-            return <BossFightPlaceholder activity={activity} />;
-        default:
-            return <div>Tipo de atividade não implementado: {activity.type}</div>;
-    }
-}
-
-// Placeholder components for each activity type
-
-const QuizPlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder">
-        <h2>📝 Quiz</h2>
-        <p>{activity.description || 'Quiz educativo'}</p>
-        <div className="placeholder-note">Integrando com sistema de quiz existente...</div>
-    </div>
-);
-
-const BattlePlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder">
-        <h2>⚔️ Batalha</h2>
-        <p>{activity.description || 'Batalha 2D'}</p>
-        <div className="placeholder-note">Em breve: Sistema de batalha por turnos</div>
-    </div>
-);
-
-const StudyPlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder">
-        <h2>📚 Estudo</h2>
-        <p>{activity.description || 'Aprender habilidades'}</p>
-        <div className="placeholder-note">Em breve: Sistema de aprendizado de skills</div>
-    </div>
-);
-
-const ShopPlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder">
-        <h2>🛒 Loja</h2>
-        <p>{activity.description || 'Comprar itens'}</p>
-        <div className="placeholder-note">Integrando com sistema de shop existente...</div>
-    </div>
-);
-
-const HealPlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder">
-        <h2>💊 Cura</h2>
-        <p>HP restaurado para o máximo!</p>
-        <div className="success-message">✅ Saúde restaurada com sucesso!</div>
-    </div>
-);
-
-const EventPlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder">
-        <h2>📋 Evento</h2>
-        <p>{activity.description || 'Evento especial'}</p>
-        <div className="placeholder-note">Em breve: Eventos da secretaria</div>
-    </div>
-);
-
-const BossFightPlaceholder: React.FC<{ activity: any }> = ({ activity }) => (
-    <div className="activity-placeholder boss">
-        <h2>👨‍🏫 Exame Final</h2>
-        <p>{activity.description || 'Prova final para passar de ano'}</p>
-        <div className="placeholder-note warning">
-            ⚠️ Em breve: Exame multifase (Quiz + Batalha)
-        </div>
-    </div>
-);
