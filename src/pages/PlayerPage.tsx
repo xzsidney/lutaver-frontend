@@ -33,10 +33,17 @@ interface CharacterData {
     affinities: Affinity[];
 }
 
+import { useAuth } from '../context/AuthContext';
+
 export function PlayerPage() {
-    // const { logout } = useAuth(); // Not used directly here anymore
+    const { logout } = useAuth();
     const navigate = useNavigate();
     const { data, loading, error } = useQuery(GET_PLAYER_HOME_DATA);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+    };
 
     if (loading) return (
         <PlayerLayout>
@@ -58,7 +65,10 @@ export function PlayerPage() {
         return (
             <PlayerLayout>
                 <div className="panel p-5 text-center">
-                    <h2>Bem-vindo, {user?.name}!</h2>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h2>Bem-vindo, {user?.name}!</h2>
+                        <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>Sair</button>
+                    </div>
                     <p>Você ainda não tem um personagem.</p>
                     <button className="btn btn-primary-br btn-br" onClick={() => navigate('/characters/new')}>
                         Criar Personagem
@@ -79,7 +89,10 @@ export function PlayerPage() {
             <div className="row g-3 mb-4">
                 <div className="col-lg-7">
                     <div className="panel h-100">
-                        <h1 className="h4 section-title mb-2">Bem-vindo, {char.name}</h1>
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                            <h1 className="h4 section-title mb-0">Bem-vindo, {char.name}</h1>
+                            <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>Sair</button>
+                        </div>
                         <p className="section-sub mb-3">
                             Continue sua jornada pela Torre do Saber respondendo quizzes e fortalecendo suas disciplinas.
                         </p>

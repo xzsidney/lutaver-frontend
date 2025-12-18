@@ -14,7 +14,8 @@ import { PlayerAccountPage } from '../pages/Player/PlayerAccountPage';
 import { PlayerDashboardPage } from '../pages/Player/PlayerDashboardPage';
 import { ShopPage } from '../pages/Player/ShopPage';
 import { InventoryPage } from '../pages/Player/InventoryPage';
-import { StealthMissionsPage } from '../pages/Player/StealthMissionsPage';
+import { StealthMissionsGame } from '../components/games/StealthMissionsGame';
+import { BattlePage } from '../pages/Battle/BattlePage';
 import { AdminUsersPage } from '../pages/Admin/AdminUsersPage';
 import { AdminCharactersPage } from '../pages/Admin/AdminCharactersPage';
 import { AdminDisciplinesPage } from '../pages/Admin/AdminDisciplinesPage';
@@ -215,10 +216,10 @@ export function AppRoutes() {
                     }
                 />
                 <Route
-                    path="/player/stealth-missions"
+                    path="/player/math-challenge"
                     element={
                         <ProtectedRoute>
-                            <StealthMissionsPage />
+                            <StealthMissionsGame />
                         </ProtectedRoute>
                     }
                 />

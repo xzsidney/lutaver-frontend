@@ -3,12 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { ME_QUERY } from '../../graphql/queries';
 import { ME_CHARACTER_QUERY } from '../../graphql/character.queries';
 import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 export function PlayerAccountPage() {
     const navigate = useNavigate();
+    const { logout } = useAuth();
     const { data: userData, loading: userLoading } = useQuery(ME_QUERY);
     const { data: characterData, loading: characterLoading } = useQuery(ME_CHARACTER_QUERY);
     const [showPasswordChange, setShowPasswordChange] = useState(false);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+    };
 
     if (userLoading || characterLoading) {
         return (
@@ -26,6 +33,7 @@ export function PlayerAccountPage() {
             {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1 className="h3">Minha Conta</h1>
+                <button className="btn btn-outline-danger" onClick={handleLogout}>Sair</button>
             </div>
 
             {/* User Info Card */}
