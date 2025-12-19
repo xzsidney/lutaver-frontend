@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Engine } from '../../game/stealth/engine';
-import { COLORS, TILE_SIZE, PLAYER_RADIUS } from '../../game/stealth/constants';
+import { TOWER_COLORS, TILE_SIZE, PLAYER_RADIUS } from '../../game/stealth/constants';
 import { ME_CHARACTER_QUERY } from '../../graphql/character.queries';
 
 // --- GraphQL ---
@@ -181,163 +181,75 @@ export const TowerExplorationPage: React.FC = () => {
 
     const initMap = (payload: any) => {
         const { seed, rooms: apiRooms, floor } = payload;
-        const rng = new SeededRNG(seed);
 
-        const mapWidth = floor.mapWidth || 60;
-        const mapHeight = floor.mapHeight || 50;
+        // Use hidden-battle style layout (30x20 grid with predefined rooms/corridors)
+        const mapWidth = 30;
+        const mapHeight = 20;
         const tiles = Array.from({ length: mapHeight }, () => Array(mapWidth).fill(1)); // 1 = Wall
 
-        const physicalRooms: { x: number, y: number, w: number, h: number }[] = [];
-
-        // Helper functions
-        const digRect = (r: { x: number, y: number, w: number, h: number }) => {
-            for (let y = r.y; y < r.y + r.h; y++) {
-                for (let x = r.x; x < r.x + r.w; x++) {
-                    if (y >= 0 && y < mapHeight && x >= 0 && x < mapWidth) tiles[y][x] = 0;
-                }
-            }
+        // Helper to carve out floors
+        const setRect = (r: { x: number, y: number, w: number, h: number }, val: number) => {
+            for (let y = r.y; y < r.y + r.h; y++)
+                for (let x = r.x; x < r.x + r.w; x++)
+                    if (y >= 0 && y < mapHeight && x >= 0 && x < mapWidth) tiles[y][x] = val;
         };
 
-        const digCorridor = (x1: number, y1: number, x2: number, y2: number) => {
-            let x = x1;
-            let y = y1;
-            while (x !== x2) {
-                if (y >= 0 && y < mapHeight && x >= 0 && x < mapWidth) {
-                    tiles[y][x] = 0;
-                    if (x + 1 < mapWidth) tiles[y][x + 1] = 0;
-                }
-                x += (x2 > x ? 1 : -1);
-            }
-            while (y !== y2) {
-                if (y >= 0 && y < mapHeight && x >= 0 && x < mapWidth) {
-                    tiles[y][x] = 0;
-                    if (x + 1 < mapWidth) tiles[y][x + 1] = 0;
-                }
-                y += (y2 > y ? 1 : -1);
-            }
-        };
+        // Define tower floor layout (similar to hidden-battle structure)
+        const rooms = [
+            { x: 2, y: 2, w: 6, h: 6 },   // Top-left room
+            { x: 10, y: 5, w: 8, h: 4 },  // Center room
+            { x: 20, y: 2, w: 8, h: 8 },  // Top-right room (spawn)
+            { x: 2, y: 12, w: 10, h: 6 }, // Bottom-left room
+            { x: 18, y: 12, w: 10, h: 6 } // Bottom-right room (boss)
+        ];
 
-        // 1. Generate Physical Layout
-        const totalRoomsToGen = Math.max(apiRooms.length + 5, 12);
-        let maxAttempts = 5; // Retry whole map if stuck
+        const corridors = [
+            { x: 8, y: 4, w: 2, h: 2 },
+            { x: 18, y: 4, w: 2, h: 2 },
+            { x: 6, y: 8, w: 2, h: 4 },
+            { x: 22, y: 10, w: 2, h: 2 }
+        ];
 
-        while (maxAttempts > 0) {
-            // Reset if retrying
-            // (Omitted full regenerate loop for brevity, but implemented single pass logic robustly below)
+        // Carve out rooms and corridors
+        rooms.forEach(r => setRect(r, 0));
+        corridors.forEach(c => setRect(c, 0));
 
-            for (let i = 0; i < totalRoomsToGen; i++) {
-                let placed = false;
-                let attempts = 0;
-                while (!placed && attempts < 100) {
-                    const w = rng.range(6, 9);
-                    const h = rng.range(6, 9);
-                    const x = rng.range(2, mapWidth - w - 4);
-                    const y = rng.range(2, mapHeight - h - 4);
-
-                    const overlap = physicalRooms.some(r =>
-                        x < r.x + r.w + 3 && x + w + 3 > r.x &&
-                        y < r.y + r.h + 3 && y + h + 3 > r.y
-                    );
-
-                    if (!overlap) {
-                        const newRoom = { x, y, w, h };
-                        digRect(newRoom);
-
-                        if (physicalRooms.length > 0) {
-                            // Connect to previous or random existing
-                            const target = (rng.next() > 0.7 && physicalRooms.length > 2)
-                                ? physicalRooms[rng.range(0, physicalRooms.length - 2)]
-                                : physicalRooms[physicalRooms.length - 1];
-
-                            const c1 = { x: Math.floor(target.x + target.w / 2), y: Math.floor(target.y + target.h / 2) };
-                            const c2 = { x: Math.floor(newRoom.x + newRoom.w / 2), y: Math.floor(newRoom.y + newRoom.h / 2) };
-                            digCorridor(c1.x, c1.y, c2.x, c2.y);
-                        }
-                        physicalRooms.push(newRoom);
-                        placed = true;
-                    }
-                    attempts++;
-                }
-            }
-            if (physicalRooms.length >= apiRooms.length) break;
-            maxAttempts--;
-            // On retry, would clear physicalRooms and tiles.
-            // For now assuming 1 pass works usually.
-        }
-
-        // 2. Assign Rooms Logically
-        if (physicalRooms.length === 0) return; // Should not happen
+        // Assign API rooms to physical rooms
+        const spawnRoom = rooms[2]; // Top-right
+        const bossRoomIdx = rooms.length - 1; // Bottom-right
 
         const processedRooms: Room[] = [];
-        const spawnRoom = physicalRooms[0];
 
-        // Exclude spawn from generic pool
-        let availableIndices = physicalRooms.map((_, i) => i).slice(1);
+        // Assign rooms to physical locations
+        apiRooms.forEach((apiRoom: any, idx: number) => {
+            if (idx >= rooms.length) return; // Skip if more API rooms than physical rooms
 
-        // Helper to find furthest room index (simple distance check)
-        const getFurthestRoomIndex = (sx: number, sy: number, indices: number[]): number => {
-            let maxDist = -1;
-            let bestIdx = -1;
-            indices.forEach(idx => {
-                const r = physicalRooms[idx];
-                const cx = r.x + r.w / 2;
-                const cy = r.y + r.h / 2;
-                const dist = (cx - sx) ** 2 + (cy - sy) ** 2;
-                if (dist > maxDist) {
-                    maxDist = dist;
-                    bestIdx = idx;
-                }
+            const physRoom = rooms[idx];
+            const style = getRoomStyle(apiRoom.name, apiRoom.type);
+
+            processedRooms.push({
+                ...apiRoom,
+                x: (physRoom.x + physRoom.w / 2) * TILE_SIZE,
+                y: (physRoom.y + physRoom.h / 2) * TILE_SIZE,
+                w: TILE_SIZE,
+                h: TILE_SIZE,
+                ...style
             });
-            return bestIdx;
-        };
-
-        const availableApiRooms = [...apiRooms];
-
-        // Place BOSS first (Rule: Furthest)
-        const bossRoomIdx = availableApiRooms.findIndex((r: any) => r.type === 'BOSS_ROOM' || r.name.toUpperCase().includes('BOSS'));
-        if (bossRoomIdx !== -1) {
-            const sx = spawnRoom.x + spawnRoom.w / 2;
-            const sy = spawnRoom.y + spawnRoom.h / 2;
-            const targetPhysicalIdx = getFurthestRoomIndex(sx, sy, availableIndices);
-
-            if (targetPhysicalIdx !== -1) {
-                const pRoom = physicalRooms[targetPhysicalIdx];
-                const bossRoom = availableApiRooms[bossRoomIdx];
-                processedRooms.push(bindRoom(bossRoom, pRoom));
-
-                // Remove used
-                availableIndices = availableIndices.filter(i => i !== targetPhysicalIdx);
-                availableApiRooms.splice(bossRoomIdx, 1);
-            }
-        }
-
-        // Place remaining randomly
-        // Shuffle available indices
-        for (let i = availableIndices.length - 1; i > 0; i--) {
-            const j = Math.floor(rng.next() * (i + 1));
-            [availableIndices[i], availableIndices[j]] = [availableIndices[j], availableIndices[i]];
-        }
-
-        availableApiRooms.forEach((room: any, i: number) => {
-            if (i < availableIndices.length) {
-                const pRoom = physicalRooms[availableIndices[i]];
-                processedRooms.push(bindRoom(room, pRoom));
-            }
         });
 
-        // Setup State
+        // Store in game state
         gameState.current.tiles = tiles;
         gameState.current.width = mapWidth;
         gameState.current.height = mapHeight;
         gameState.current.rooms = processedRooms;
 
-        // Player Start
+        // Player Start (spawn room)
         gameState.current.player = {
             x: (spawnRoom.x + spawnRoom.w / 2) * TILE_SIZE,
             y: (spawnRoom.y + spawnRoom.h / 2) * TILE_SIZE
         };
 
-        console.log("Deterministic School Generated", { seed, rooms: processedRooms.length });
+        console.log("Tower Floor Generated (Hidden-Battle Style)", { seed, rooms: processedRooms.length });
     };
 
     const bindRoom = (apiRoom: any, physRoom: any): Room => {
@@ -355,10 +267,13 @@ export const TowerExplorationPage: React.FC = () => {
     // Input Handling
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            gameState.current.keys.add(e.key.toLowerCase());
+            // Handle interaction keys separately (don't add to movement keys)
             if (e.key === ' ' || e.key.toLowerCase() === 'e') {
+                e.preventDefault(); // Prevent page scroll on space
                 checkInteraction();
+                return; // Don't add to keys set
             }
+            gameState.current.keys.add(e.key.toLowerCase());
         };
         const handleKeyUp = (e: KeyboardEvent) => gameState.current.keys.delete(e.key.toLowerCase());
         window.addEventListener('keydown', handleKeyDown);
@@ -432,7 +347,7 @@ export const TowerExplorationPage: React.FC = () => {
 
         if (dx !== 0 || dy !== 0) {
             const mag = Math.hypot(dx, dy);
-            const speed = 300;
+            const speed = 150; // Reduced from 300 for better control
             const nx = player.x + (dx / mag) * speed * dt;
             const ny = player.y + (dy / mag) * speed * dt;
             const pos = Engine.checkCircleWallCollision(nx, ny, PLAYER_RADIUS, tiles);
@@ -452,7 +367,7 @@ export const TowerExplorationPage: React.FC = () => {
         setActiveRoom(nearbyRoom || null);
 
         // --- DRAW ---
-        ctx.fillStyle = COLORS.BG;
+        ctx.fillStyle = TOWER_COLORS.BG;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.save();
@@ -467,14 +382,18 @@ export const TowerExplorationPage: React.FC = () => {
             for (let x = Math.max(0, startX); x < Math.min(width, endX); x++) {
                 const tile = tiles[y][x];
                 if (tile === 1) {
-                    ctx.fillStyle = COLORS.WALL;
+                    // Wall with depth
+                    ctx.fillStyle = TOWER_COLORS.WALL;
                     ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    ctx.fillStyle = COLORS.WALL_HIGHLIGHT;
+                    ctx.fillStyle = TOWER_COLORS.WALL_HIGHLIGHT;
                     ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, 4);
                 } else {
-                    ctx.fillStyle = (tile === 2) ? '#1e293b' : COLORS.FLOOR;
+                    // Floor (light school tiles)
+                    ctx.fillStyle = TOWER_COLORS.FLOOR;
                     ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    ctx.strokeStyle = '#1e293b';
+
+                    // Floor tile lines (for that school hallway look)
+                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
                     ctx.lineWidth = 1;
                     ctx.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
@@ -483,30 +402,79 @@ export const TowerExplorationPage: React.FC = () => {
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+
+        // Draw Rooms with School Theme
         rooms.forEach(room => {
             if (room.x === undefined || room.y === undefined) return;
             const isNearby = nearbyRoom?.id === room.id;
+
+            // Pulsing glow effect for nearby rooms
+            const pulseTime = Date.now() / 500;
+            const glowIntensity = isNearby ? (Math.sin(pulseTime) * 0.3 + 0.7) : 0.3;
+
+            // Door frame (school door)
+            ctx.fillStyle = TOWER_COLORS.DOOR;
+            ctx.fillRect(room.x - TILE_SIZE * 0.6, room.y - TILE_SIZE * 0.7, TILE_SIZE * 1.2, TILE_SIZE * 1.4);
+
+            // Room background circle
             if (isNearby) {
-                ctx.shadowBlur = 20;
+                ctx.shadowBlur = 30 * glowIntensity;
                 ctx.shadowColor = room.color || '#fff';
             }
-            ctx.fillStyle = (room.color || '#fff') + '44';
+            ctx.fillStyle = (room.color || '#fff') + Math.floor(glowIntensity * 100).toString(16);
             ctx.beginPath();
-            ctx.arc(room.x, room.y, TILE_SIZE * 0.4, 0, Math.PI * 2);
+            ctx.arc(room.x, room.y, TILE_SIZE * 0.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.shadowBlur = 0;
+
+            // Room Icon (bigger)
+            ctx.font = '48px sans-serif';
             ctx.fillStyle = '#fff';
-            ctx.font = '32px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
             ctx.fillText(room.icon || '🚪', room.x, room.y);
 
-            ctx.font = '14px monospace';
-            ctx.fillStyle = isNearby ? '#fff' : '#94a3b8';
-            ctx.fillText(room.name, room.x, room.y + TILE_SIZE * 0.6);
+            // Room name below
+            ctx.font = isNearby ? 'bold 16px sans-serif' : '14px sans-serif';
+            ctx.fillStyle = isNearby ? '#fff' : '#cbd5e1';
+            ctx.fillText(room.name, room.x, room.y + TILE_SIZE * 0.8);
+
+            // Info card for nearby room
+            if (isNearby && room.description) {
+                const cardX = room.x + TILE_SIZE * 1.5;
+                const cardY = room.y - TILE_SIZE;
+                const cardW = 250;
+                const cardH = 100;
+
+                // Card background
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+                ctx.strokeStyle = room.color || '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.fillRect(cardX, cardY, cardW, cardH);
+                ctx.strokeRect(cardX, cardY, cardW, cardH);
+
+                // Card content
+                ctx.textAlign = 'left';
+                ctx.font = 'bold 16px sans-serif';
+                ctx.fillStyle = room.color || '#38bdf8';
+                ctx.fillText(room.name, cardX + 15, cardY + 25);
+
+                ctx.font = '12px sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                const desc = room.description.length > 40
+                    ? room.description.substring(0, 40) + '...'
+                    : room.description;
+                ctx.fillText(desc, cardX + 15, cardY + 50);
+
+                ctx.font = 'bold 14px monospace';
+                ctx.fillStyle = '#10b981';
+                ctx.fillText('[E] ENTRAR', cardX + 15, cardY + 75);
+            }
         });
 
         ctx.shadowBlur = 15;
-        ctx.shadowColor = COLORS.PLAYER;
-        ctx.fillStyle = COLORS.PLAYER;
+        ctx.shadowColor = TOWER_COLORS.PLAYER;
+        ctx.fillStyle = TOWER_COLORS.PLAYER;
         ctx.beginPath();
         ctx.arc(player.x, player.y, PLAYER_RADIUS, 0, Math.PI * 2);
         ctx.fill();
@@ -520,7 +488,64 @@ export const TowerExplorationPage: React.FC = () => {
 
         ctx.restore();
 
-        ctx.fillStyle = COLORS.SCANLINE;
+        // Draw Minimap
+        const minimapSize = 200;
+        const minimapX = canvas.width - minimapSize - 20;
+        const minimapY = canvas.height - minimapSize - 20;
+        const minimapScale = minimapSize / Math.max(width * TILE_SIZE, height * TILE_SIZE);
+
+        // Minimap background
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.fillRect(minimapX, minimapY, minimapSize, minimapSize);
+        ctx.strokeRect(minimapX, minimapY, minimapSize, minimapSize);
+
+        // Minimap tiles (simplified)
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const isFloor = tiles[y] && tiles[y][x] === 0;
+                if (isFloor) {
+                    ctx.fillStyle = '#475569';
+                    ctx.fillRect(
+                        minimapX + x * TILE_SIZE * minimapScale,
+                        minimapY + y * TILE_SIZE * minimapScale,
+                        TILE_SIZE * minimapScale,
+                        TILE_SIZE * minimapScale
+                    );
+                }
+            }
+        }
+
+        // Minimap rooms
+        rooms.forEach(room => {
+            if (room.x === undefined || room.y === undefined) return;
+            ctx.fillStyle = room.color || '#38bdf8';
+            ctx.beginPath();
+            ctx.arc(
+                minimapX + room.x * minimapScale,
+                minimapY + room.y * minimapScale,
+                3,
+                0, Math.PI * 2
+            );
+            ctx.fill();
+        });
+
+        // Minimap player
+        ctx.fillStyle = '#38bdf8';
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(
+            minimapX + player.x * minimapScale,
+            minimapY + player.y * minimapScale,
+            4,
+            0, Math.PI * 2
+        );
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = TOWER_COLORS.SCANLINE;
         for (let i = 0; i < canvas.height; i += 4) {
             ctx.fillRect(0, i, canvas.width, 1);
         }

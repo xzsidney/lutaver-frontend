@@ -1,9 +1,11 @@
 
+
 export const TILE_SIZE = 64;
 export const PLAYER_RADIUS = 18;
 export const ENEMY_RADIUS = 18;
 export const ITEM_RADIUS = 12;
 
+// Original colors for HiddenBattle (dark stealth theme)
 export const COLORS = {
     BG: '#020617',
     WALL: '#1e293b',
@@ -15,6 +17,22 @@ export const COLORS = {
     EXTRACTION: '#10b981',
     FOV: 'rgba(244, 63, 94, 0.15)',
     SCANLINE: 'rgba(255, 255, 255, 0.03)'
+};
+
+// School-themed colors for Tower Exploration (matching hidden-battle dark theme)
+export const TOWER_COLORS = {
+    BG: '#020617',           // Same as hidden-battle
+    WALL: '#1e293b',         // Same as hidden-battle
+    WALL_HIGHLIGHT: '#334155', // Same as hidden-battle
+    FLOOR: '#0f172a',        // Same as hidden-battle (dark floors)
+    PLAYER: '#38bdf8',
+    ENEMY: '#f43f5e',
+    ITEM: '#fbbf24',
+    EXTRACTION: '#10b981',
+    FOV: 'rgba(244, 63, 94, 0.15)',
+    SCANLINE: 'rgba(255, 255, 255, 0.03)',
+    DOOR: '#8b5a3c',         // Brown door color
+    ROOM_BG: 'rgba(255, 255, 255, 0.05)'
 };
 
 export const LEVELS: any[] = [
