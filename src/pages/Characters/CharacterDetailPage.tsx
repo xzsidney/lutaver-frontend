@@ -272,6 +272,36 @@ export function CharacterDetailPage() {
                     >
                         ⚔️ Batalhar
                     </button>
+                    <button
+                        onClick={() => navigate('/hidden-battle')}
+                        style={{
+                            padding: '15px 30px',
+                            backgroundColor: '#2e1065', // violet-950
+                            color: '#38bdf8', // sky-400
+                            border: '1px solid #4ade80', // green-400
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            transition: 'all 0.3s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            boxShadow: '0 0 10px rgba(74, 222, 128, 0.2)'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = '#3b0764';
+                            e.currentTarget.style.boxShadow = '0 0 20px rgba(74, 222, 128, 0.4)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = '#2e1065';
+                            e.currentTarget.style.boxShadow = '0 0 10px rgba(74, 222, 128, 0.2)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                    >
+                        🤫 Batalha Escondida
+                    </button>
                     {getCharacterFloor() && (
                         <div style={{
                             padding: '15px',

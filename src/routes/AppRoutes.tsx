@@ -31,6 +31,7 @@ import { AdminQuizCreateEditPage } from '../pages/Admin/quizzes/AdminQuizCreateE
 import { TowerExplorationPage } from '../pages/Tower/TowerExplorationPage';
 import { RoomContainer } from '../modules/tower/rooms/RoomContainer';
 import { ActivityContainer } from '../modules/tower/activities/ActivityContainer';
+import HiddenBattlePage from '../pages/HiddenBattle/HiddenBattlePage';
 
 export function AppRoutes() {
     return (
@@ -261,6 +262,14 @@ export function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <Battle2DPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/hidden-battle"
+                    element={
+                        <ProtectedRoute>
+                            <HiddenBattlePage />
                         </ProtectedRoute>
                     }
                 />

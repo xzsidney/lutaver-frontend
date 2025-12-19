@@ -137,6 +137,20 @@ export function PlayerDashboardPage() {
                         >
                             🥊 Batalha 2D
                         </button>
+                        <button
+                            onClick={() => navigate('/hidden-battle')}
+                            className="btn"
+                            style={{
+                                minWidth: '200px',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                backgroundColor: '#2e1065', // violet-950
+                                color: '#38bdf8', // sky-400
+                                border: '1px solid #4ade80' // green-400
+                            }}
+                        >
+                            🤫 Batalha Escondida
+                        </button>
                     </div>
 
                     {/* Missões Stealth */}
