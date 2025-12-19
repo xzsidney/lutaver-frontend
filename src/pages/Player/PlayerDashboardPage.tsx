@@ -105,6 +105,40 @@ export function PlayerDashboardPage() {
                         )}
                     </div>
 
+
+                    {/* Sistema de Batalha */}
+                    <div className="panel border-start border-4 border-danger">
+                        <h3 className="h5 section-title mb-3">
+                            ⚔️ Sistema de Batalha
+                        </h3>
+                        <p className="text-muted small mb-3">
+                            Teste sua força contra inimigos poderosos e ganhe recompensas!
+                        </p>
+                        <button
+                            onClick={() => navigate('/battle')}
+                            className="btn btn-danger"
+                            style={{
+                                minWidth: '200px',
+                                fontSize: '16px',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            ⚔️ Batalhar (Turno)
+                        </button>
+                        <button
+                            onClick={() => navigate('/battle-2d')}
+                            className="btn btn-warning"
+                            style={{
+                                minWidth: '200px',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                color: '#000'
+                            }}
+                        >
+                            🥊 Batalha 2D
+                        </button>
+                    </div>
+
                     {/* Missões Stealth */}
                     <div className="panel border-start border-4 border-info">
                         <h3 className="h5 section-title mb-3">

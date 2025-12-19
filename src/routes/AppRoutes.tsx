@@ -16,6 +16,7 @@ import { ShopPage } from '../pages/Player/ShopPage';
 import { InventoryPage } from '../pages/Player/InventoryPage';
 import { StealthMissionsGame } from '../components/games/StealthMissionsGame';
 import { BattlePage } from '../pages/Battle/BattlePage';
+import { Battle2DPage } from '../pages/Battle/Battle2DPage';
 import { AdminUsersPage } from '../pages/Admin/AdminUsersPage';
 import { AdminCharactersPage } from '../pages/Admin/AdminCharactersPage';
 import { AdminDisciplinesPage } from '../pages/Admin/AdminDisciplinesPage';
@@ -244,6 +245,22 @@ export function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <TowerExplorationPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/battle"
+                    element={
+                        <ProtectedRoute>
+                            <BattlePage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/battle-2d"
+                    element={
+                        <ProtectedRoute>
+                            <Battle2DPage />
                         </ProtectedRoute>
                     }
                 />

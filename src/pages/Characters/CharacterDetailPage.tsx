@@ -245,6 +245,33 @@ export function CharacterDetailPage() {
                     >
                         🏰 Explorar Torre
                     </button>
+                    <button
+                        onClick={() => navigate('/battle')}
+                        style={{
+                            padding: '15px 30px',
+                            backgroundColor: '#d32f2f',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            transition: 'all 0.3s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = '#b71c1c';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = '#d32f2f';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                    >
+                        ⚔️ Batalhar
+                    </button>
                     {getCharacterFloor() && (
                         <div style={{
                             padding: '15px',
