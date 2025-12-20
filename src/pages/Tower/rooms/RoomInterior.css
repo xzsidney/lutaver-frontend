@@ -1,0 +1,212 @@
+/* CSS para o interior da sala */
+
+.room-interior-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    background-color: #020617 !important;
+    overflow: hidden !important;
+    z-index: 1000 !important;
+}
+
+.room-interior-sidebar {
+    width: 320px !important;
+    flex-shrink: 0 !important;
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(24px) !important;
+    border-right: 1px solid #1e293b !important;
+    padding: 24px !important;
+    overflow-y: auto !important;
+    color: #f1f5f9 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+}
+
+.room-interior-canvas-container {
+    flex: 1 !important;
+    background-color: #020617 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Header */
+.room-interior-title {
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    background: linear-gradient(to right, #f59e0b, #ef4444) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin-bottom: 8px !important;
+}
+
+.room-interior-subtitle {
+    font-size: 10px !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    font-style: italic !important;
+    opacity: 0.6 !important;
+}
+
+/* Card */
+.room-interior-card {
+    background-color: rgba(2, 6, 23, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+}
+
+.room-interior-card-title {
+    font-size: 10px !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 12px !important;
+    font-weight: 700 !important;
+}
+
+.room-interior-text {
+    font-size: 14px !important;
+    color: #cbd5e1 !important;
+    line-height: 1.6 !important;
+}
+
+.room-interior-image {
+    width: 100% !important;
+    max-width: 200px !important;
+    height: auto !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    margin-bottom: 12px !important;
+    display: block !important;
+}
+
+.room-interior-info {
+    font-size: 11px !important;
+    color: #cbd5e1 !important;
+    font-style: italic !important;
+    line-height: 1.6 !important;
+}
+
+/* Actions */
+.room-interior-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.room-interior-action-btn {
+    width: 100% !important;
+    padding: 12px !important;
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-align: left !important;
+}
+
+.room-interior-action-btn:hover {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    transform: translateX(4px) !important;
+}
+
+.room-interior-action-icon {
+    font-size: 24px !important;
+    flex-shrink: 0 !important;
+}
+
+.room-interior-action-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+}
+
+.room-interior-action-label {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #f1f5f9 !important;
+}
+
+.room-interior-action-command {
+    font-size: 10px !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Button */
+.room-interior-btn {
+    width: 100% !important;
+    padding: 12px !important;
+    background-color: rgba(51, 65, 85, 0.6) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #cbd5e1 !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+}
+
+.room-interior-btn:hover {
+    background-color: rgba(51, 65, 85, 0.8) !important;
+}
+
+/* Placeholder */
+.room-interior-placeholder {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(2, 6, 23, 0.5) 100%) !important;
+}
+
+.room-interior-placeholder-content {
+    text-align: center !important;
+    padding: 48px !important;
+    max-width: 600px !important;
+}
+
+.room-interior-placeholder-content h2 {
+    font-size: 32px !important;
+    color: #f1f5f9 !important;
+    margin-bottom: 16px !important;
+}
+
+.room-interior-placeholder-content p {
+    font-size: 16px !important;
+    color: #94a3b8 !important;
+    margin-bottom: 12px !important;
+}
+
+.room-interior-placeholder-hint {
+    font-size: 14px !important;
+    color: #64748b !important;
+    font-style: italic !important;
+}
+
+/* Error */
+.room-interior-error {
+    text-align: center !important;
+    padding: 48px !important;
+}
+
+.room-interior-error h2 {
+    color: #f1f5f9 !important;
+    margin-bottom: 24px !important;
+}

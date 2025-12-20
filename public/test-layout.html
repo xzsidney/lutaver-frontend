@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Layout - Navegador Escolar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background-color: #020617;
+        }
+
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(24px);
+            border-right: 1px solid #1e293b;
+            padding: 24px;
+            overflow-y: auto;
+            color: #f1f5f9;
+        }
+
+        .sidebar h1 {
+            font-size: 20px;
+            font-weight: 900;
+            background: linear-gradient(to right, #34d399, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .sidebar p {
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: rgba(2, 6, 23, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            box-shadow: 0 0 15px #3b82f6;
+        }
+
+        .canvas-container {
+            flex: 1;
+            background-color: #020617;
+            position: relative;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(51, 65, 85, 0.6);
+            border: none;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: rgba(51, 65, 85, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar à esquerda -->
+        <div class="sidebar">
+            <h1>SISTEMA SMART</h1>
+            <p>Teste de Layout Puro</p>
+
+            <div class="card">
+                <h2>Mapeamento Local</h2>
+                <div class="status">
+                    <div class="dot"></div>
+                    <span style="font-weight: 700; color: #60a5fa;">CORREDORES</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Relatório de IA</h2>
+                <p style="font-style: italic; color: #cbd5e1; font-size: 14px; line-height: 1.6;">
+                    "Use WASD para navegar pelo ecossistema escolar."
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>Interface</h2>
+                <p style="color: #64748b; font-size: 10px; margin-bottom: 12px;">
+                    Use WASD para navegar pelo ecossistema escolar.
+                </p>
+                <button class="btn">← Voltar</button>
+            </div>
+        </div>
+
+        <!-- Canvas à direita -->
+        <div class="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to match container
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            draw();
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw some test content
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(50, 50, 200, 150);
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 50, 200, 150);
+
+            ctx.fillStyle = '#3b82f6';
+            ctx.font = 'bold 16px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('BIBLIOTECA', 150, 125);
+
+            // Draw player
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+    </script>
+</body>
+</html>

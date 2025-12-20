@@ -13,6 +13,30 @@ export const GET_TOWER_FLOORS = gql`
     }
 `;
 
+export const GET_FLOOR_BY_SCHOOL_YEAR = gql`
+    query GetFloorBySchoolYear($schoolYear: String!) {
+        floorBySchoolYear(schoolYear: $schoolYear) {
+            id
+            floorNumber
+            name
+            schoolYear
+            mapWidth
+            mapHeight
+        }
+    }
+`;
+
+export const GET_FLOOR_ROOMS = gql`
+    query GetFloorRooms($floorId: ID!) {
+        floorRooms(floorId: $floorId) {
+            id
+            name
+            description
+            mapLayout
+        }
+    }
+`;
+
 export const GET_FLOOR_STATE = gql`
     query GetFloorState($characterId: ID!, $floorId: ID!) {
         floorState(characterId: $characterId, floorId: $floorId) {

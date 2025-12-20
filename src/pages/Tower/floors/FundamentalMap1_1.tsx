@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useMutation, gql } from '@apollo/client';
-import { TowerRoom, RoomAction } from '../../game/stealth/types';
+import { useNavigate } from 'react-router-dom';
+import { TowerRoom, RoomAction } from '../../../game/stealth/types';
 import {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
@@ -10,24 +9,9 @@ import {
     TOWER_DOORS,
     TOWER_WALKABLES,
     Rect,
-} from '../../game/stealth/towerMapConstants';
-import { getRoomInsights } from '../../services/geminiService';
-import { ME_CHARACTER_QUERY } from '../../graphql/character.queries';
-
-// --- GraphQL ---
-
-const START_TOWER_FLOOR_RUN = gql`
-    mutation StartTowerFloorRun($floorId: ID!, $characterId: ID!) {
-        startTowerFloorRun(floorId: $floorId, characterId: $characterId) {
-            runId
-            seed
-            floor {
-                mapWidth
-                mapHeight
-            }
-        }
-    }
-`;
+} from '../../../game/stealth/towerMapConstants';
+import { getRoomInsights } from '../../../services/geminiService';
+import './FundamentalMap1_1.css';
 
 interface FeedbackState {
     roomId: string;
@@ -50,17 +34,9 @@ interface Player {
     dirY: number;
 }
 
-export const TowerExplorationPage: React.FC = () => {
-    const { floorId } = useParams<{ floorId: string }>();
+export const FundamentalMap1_1: React.FC = () => {
     const navigate = useNavigate();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-    // Auth & Game Context
-    const { data: charData } = useQuery(ME_CHARACTER_QUERY);
-    const characterId = charData?.meCharacter?.id;
-
-    // Mutations
-    const [startRun] = useMutation(START_TOWER_FLOOR_RUN);
 
     // Game State
     const playerRef = useRef<Player>({
@@ -81,11 +57,9 @@ export const TowerExplorationPage: React.FC = () => {
         response: 'Use WASD ou as setas para explorar o campus.',
     });
     const [lastAction, setLastAction] = useState<string | null>(null);
-    const [activeFeedback, setActiveFeedback] =
-        useState<FeedbackState | null>(null);
+    const [activeFeedback, setActiveFeedback] = useState<FeedbackState | null>(null);
     const [focusMode, setFocusMode] = useState(false);
 
-    // Ref para gerenciar animações de rotação das salas
     const roomAnimations = useRef<Map<string, RoomAnimation>>(new Map());
     const prevRoomId = useRef<string | null>(null);
 
@@ -93,7 +67,7 @@ export const TowerExplorationPage: React.FC = () => {
     const LERP_FACTOR = 0.08;
     const LEAD_DISTANCE = 60;
     const FEEDBACK_DURATION = 1500;
-    const ROTATION_DURATION = 600; // ms
+    const ROTATION_DURATION = 600;
 
     const isPointWalkable = useCallback((x: number, y: number) => {
         return TOWER_WALKABLES.some(
@@ -159,22 +133,6 @@ export const TowerExplorationPage: React.FC = () => {
         setTimeout(() => setLastAction(null), 2000);
     };
 
-    // Initialize run
-    useEffect(() => {
-        if (!floorId || !characterId) return;
-
-        const init = async () => {
-            try {
-                await startRun({
-                    variables: { floorId, characterId },
-                });
-            } catch (err) {
-                console.error('Failed to start run:', err);
-            }
-        };
-        init();
-    }, [floorId, characterId, startRun]);
-
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             keys.current[e.key.toLowerCase()] = true;
@@ -193,7 +151,6 @@ export const TowerExplorationPage: React.FC = () => {
         };
     }, []);
 
-    // Monitora entrada e saída de salas para disparar animações
     useEffect(() => {
         const now = Date.now();
         if (currentRoom && currentRoom.id !== prevRoomId.current) {
@@ -273,10 +230,8 @@ export const TowerExplorationPage: React.FC = () => {
 
             const viewW = CANVAS_WIDTH / ZOOM_LEVEL;
             const viewH = CANVAS_HEIGHT / ZOOM_LEVEL;
-            const targetCamX =
-                p.x + p.w / 2 - viewW / 2 + p.dirX * LEAD_DISTANCE;
-            const targetCamY =
-                p.y + p.h / 2 - viewH / 2 + p.dirY * LEAD_DISTANCE;
+            const targetCamX = p.x + p.w / 2 - viewW / 2 + p.dirX * LEAD_DISTANCE;
+            const targetCamY = p.y + p.h / 2 - viewH / 2 + p.dirY * LEAD_DISTANCE;
 
             cam.x += (targetCamX - cam.x) * LERP_FACTOR;
             cam.y += (targetCamY - cam.y) * LERP_FACTOR;
@@ -316,18 +271,9 @@ export const TowerExplorationPage: React.FC = () => {
                                 el.x + el.w,
                                 el.y + el.h
                             );
-                            grad.addColorStop(
-                                0,
-                                `rgba(34, 211, 238, ${0.05 + pulse * 0.05})`
-                            );
-                            grad.addColorStop(
-                                0.5,
-                                `rgba(34, 211, 238, ${0.15 + pulse * 0.1})`
-                            );
-                            grad.addColorStop(
-                                1,
-                                `rgba(34, 211, 238, ${0.05 + pulse * 0.05})`
-                            );
+                            grad.addColorStop(0, `rgba(34, 211, 238, ${0.05 + pulse * 0.05})`);
+                            grad.addColorStop(0.5, `rgba(34, 211, 238, ${0.15 + pulse * 0.1})`);
+                            grad.addColorStop(1, `rgba(34, 211, 238, ${0.05 + pulse * 0.05})`);
                             ctx.fillStyle = grad;
                             ctx.fillRect(el.x, el.y, el.w, el.h);
                             ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 + pulse * 0.2})`;
@@ -345,21 +291,15 @@ export const TowerExplorationPage: React.FC = () => {
                                 const elapsed = now - anim.startTime;
                                 if (elapsed < anim.duration) {
                                     const progress = elapsed / anim.duration;
-                                    rotationAngle =
-                                        Math.sin(progress * Math.PI) * 0.04;
-                                    scaleEffect =
-                                        1.0 +
-                                        Math.sin(progress * Math.PI) * 0.02;
+                                    rotationAngle = Math.sin(progress * Math.PI) * 0.04;
+                                    scaleEffect = 1.0 + Math.sin(progress * Math.PI) * 0.02;
                                 } else {
                                     roomAnimations.current.delete(r.id);
                                 }
                             }
 
-                            const elapsedFeedback =
-                                now - (activeFeedback?.startTime || 0);
-                            const feedbackActive =
-                                hasFeedback &&
-                                elapsedFeedback < FEEDBACK_DURATION;
+                            const elapsedFeedback = now - (activeFeedback?.startTime || 0);
+                            const feedbackActive = hasFeedback && elapsedFeedback < FEEDBACK_DURATION;
                             const feedbackProgress = feedbackActive
                                 ? 1 - elapsedFeedback / FEEDBACK_DURATION
                                 : 0;
@@ -406,32 +346,20 @@ export const TowerExplorationPage: React.FC = () => {
                                         ? '#3b82f6'
                                         : r.color
                                     : r.color + '33';
-                            ctx.lineWidth =
-                                isActive || feedbackActive
-                                    ? 3
-                                    : isAnimating
-                                        ? 2
-                                        : 1;
+                            ctx.lineWidth = isActive || feedbackActive ? 3 : isAnimating ? 2 : 1;
                             ctx.strokeRect(r.x, r.y, r.w, r.h);
                             ctx.shadowBlur = 0;
 
-                            ctx.fillStyle = isActive
-                                ? '#fff'
-                                : r.color + 'aa';
+                            ctx.fillStyle = isActive ? '#fff' : r.color + 'aa';
                             ctx.font = isActive
                                 ? 'bold 10px "Inter", sans-serif'
                                 : '600 8px "Inter", sans-serif';
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
-                            ctx.fillText(
-                                r.name,
-                                r.x + r.w / 2,
-                                r.y + r.h / 2
-                            );
+                            ctx.fillText(r.name, r.x + r.w / 2, r.y + r.h / 2);
 
                             if (feedbackActive && activeFeedback) {
-                                const floatOffset =
-                                    (1 - feedbackProgress) * 50;
+                                const floatOffset = (1 - feedbackProgress) * 50;
                                 ctx.globalAlpha = feedbackProgress;
                                 ctx.font = '24px serif';
                                 ctx.fillText(
@@ -449,33 +377,21 @@ export const TowerExplorationPage: React.FC = () => {
                     if (focusMode && currentRoom) {
                         ctx.save();
                         ctx.filter = 'blur(6px) brightness(0.2)';
-                        TOWER_CORRIDORS.forEach((c) =>
-                            drawMapElement(c, 'corridor')
-                        );
+                        TOWER_CORRIDORS.forEach((c) => drawMapElement(c, 'corridor'));
                         TOWER_DOORS.forEach((d) => drawMapElement(d, 'door'));
                         TOWER_ROOMS.forEach((r) => {
-                            if (r.id !== currentRoom.id)
-                                drawMapElement(r, 'room', r);
+                            if (r.id !== currentRoom.id) drawMapElement(r, 'room', r);
                         });
                         ctx.restore();
                         drawMapElement(currentRoom, 'room', currentRoom);
                     } else {
-                        TOWER_CORRIDORS.forEach((c) =>
-                            drawMapElement(c, 'corridor')
-                        );
+                        TOWER_CORRIDORS.forEach((c) => drawMapElement(c, 'corridor'));
                         TOWER_DOORS.forEach((d) => drawMapElement(d, 'door'));
                         TOWER_ROOMS.forEach((r) => drawMapElement(r, 'room', r));
                     }
 
                     const pPos = { x: p.x + p.w / 2, y: p.y + p.h / 2 };
-                    const playerGlow = ctx.createRadialGradient(
-                        pPos.x,
-                        pPos.y,
-                        0,
-                        pPos.x,
-                        pPos.y,
-                        80
-                    );
+                    const playerGlow = ctx.createRadialGradient(pPos.x, pPos.y, 0, pPos.x, pPos.y, 80);
                     playerGlow.addColorStop(0, 'rgba(34, 197, 94, 0.2)');
                     playerGlow.addColorStop(1, 'rgba(2, 6, 23, 0)');
                     ctx.fillStyle = playerGlow;
@@ -488,12 +404,7 @@ export const TowerExplorationPage: React.FC = () => {
                     ctx.fill();
                     ctx.shadowBlur = 0;
                     ctx.fillStyle = '#052e16';
-                    ctx.fillRect(
-                        pPos.x + p.dirX * 6 - 2,
-                        pPos.y + p.dirY * 6 - 2,
-                        4,
-                        4
-                    );
+                    ctx.fillRect(pPos.x + p.dirX * 6 - 2, pPos.y + p.dirY * 6 - 2, 4, 4);
                 }
             }
             animationFrameId = requestAnimationFrame(gameLoop);
@@ -504,154 +415,44 @@ export const TowerExplorationPage: React.FC = () => {
     }, [canMoveTo, getRoomAt, currentRoom, activeFeedback, focusMode]);
 
     return (
-        <div className="flex h-screen w-full bg-[#020617] font-sans selection:bg-emerald-500/30 overflow-hidden text-slate-100">
-            <div className="w-80 border-r border-slate-900 p-6 flex flex-col gap-6 bg-slate-900/60 backdrop-blur-2xl z-10 shadow-2xl overflow-y-auto">
-                <header className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_12px_#10b981]" />
-                        <h1 className="text-xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
-                            SISTEMA SMART
-                        </h1>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest opacity-60 italic">
-                            Comando Central
-                        </p>
-                        {focusMode && (
-                            <span className="bg-cyan-500/10 text-cyan-400 text-[8px] font-black px-2 py-0.5 rounded-full border border-cyan-500/20 animate-pulse tracking-tight">
-                                FOCO ATIVO
-                            </span>
-                        )}
-                    </div>
+        <div className="fundamental-map-container">
+            <div className="fundamental-map-sidebar">
+                <header>
+                    <h1 className="fundamental-map-title">SISTEMA SMART</h1>
+                    <p className="fundamental-map-subtitle">Teste de Layout</p>
                 </header>
 
-                <div className="flex flex-col gap-5">
-                    <div className="bg-slate-950/40 rounded-xl p-4 border border-white/5 transition-all shadow-inner">
-                        <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
-                            Mapeamento Local
-                        </h2>
-                        <div className="flex items-center gap-3">
-                            <div
-                                className={`w-3 h-3 rounded-full transition-all duration-700 ${currentRoom ? 'scale-125 shadow-[0_0_15px_#3b82f6]' : 'opacity-20'}`}
-                                style={{
-                                    backgroundColor: currentRoom
-                                        ? '#3b82f6'
-                                        : '#334155',
-                                }}
-                            />
-                            <span
-                                className={`text-base font-bold tracking-tight transition-colors duration-300 ${currentRoom ? 'text-blue-400' : 'text-slate-600'}`}
-                            >
-                                {currentRoom ? currentRoom.name : 'CORREDORES'}
-                            </span>
-                        </div>
-                    </div>
-
-                    {currentRoom && (
-                        <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                            <div className="relative h-32 w-full rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-                                <img
-                                    src={currentRoom.details.image}
-                                    alt={currentRoom.name}
-                                    className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-80" />
-                                <div className="absolute bottom-2 left-3">
-                                    <p className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">
-                                        Protocolo Ativo
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="bg-slate-950/30 p-3 rounded-lg border border-white/5">
-                                <p className="text-[11px] text-slate-400 leading-relaxed italic font-medium">
-                                    {currentRoom.details.info}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-
-                    {currentRoom?.actions && (
-                        <div className="bg-blue-500/5 rounded-xl p-4 border border-blue-500/10 animate-in fade-in zoom-in-95 duration-500 shadow-lg">
-                            <h2 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">
-                                Ações Inteligentes
-                            </h2>
-                            <div className="grid grid-cols-1 gap-2">
-                                {currentRoom.actions.map((action, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => handleRoomAction(action)}
-                                        disabled={aiState.loading}
-                                        className={`group relative flex items-center gap-3 p-3 rounded-lg border border-white/5 bg-[#020617]/40 hover:bg-slate-800/60 transition-all active:scale-95 ${lastAction === action.label ? 'ring-1 ring-blue-500/50 bg-blue-500/10' : ''} disabled:opacity-30 disabled:grayscale`}
-                                    >
-                                        <span className="text-xl transition-transform group-hover:rotate-12">
-                                            {action.icon}
-                                        </span>
-                                        <div className="text-left">
-                                            <p className="text-xs font-bold text-slate-100">
-                                                {action.label}
-                                            </p>
-                                            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-tight">
-                                                Ativar Módulo
-                                            </p>
-                                        </div>
-                                        {lastAction === action.label && (
-                                            <div className="ml-auto w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping" />
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="bg-slate-950/60 rounded-xl p-5 border border-white/5 min-h-[140px] flex flex-col shadow-2xl relative overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/10 to-transparent" />
-                        <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex justify-between items-center">
-                            <span>Relatório de IA</span>
-                            {aiState.loading && (
-                                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_8px_#60a5fa]" />
-                            )}
-                        </h2>
-                        <p className="text-slate-300 italic text-sm leading-relaxed transition-opacity group-hover:opacity-100 opacity-90">
-                            "{aiState.response}"
-                        </p>
+                <div className="fundamental-map-card">
+                    <h2 className="fundamental-map-card-title">Mapeamento Local</h2>
+                    <div className="fundamental-map-status">
+                        <div className={`fundamental-map-dot ${currentRoom ? 'active' : 'inactive'}`} />
+                        <span className={`fundamental-map-room-name ${currentRoom ? 'active' : 'inactive'}`}>
+                            {currentRoom ? currentRoom.name : 'CORREDORES'}
+                        </span>
                     </div>
                 </div>
 
-                <div className="mt-auto pt-4">
-                    <div className="bg-[#020617]/40 rounded-xl p-4 border border-slate-800/30">
-                        <h3 className="text-[10px] font-bold text-slate-600 mb-4 uppercase tracking-[0.2em]">
-                            Interface
-                        </h3>
-                        <div className="flex flex-col gap-3">
-                            <p className="text-[10px] text-slate-500 leading-tight font-medium">
-                                Use WASD para navegar pelo ecossistema escolar.
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <kbd className="px-2 py-1 bg-slate-900 rounded text-[10px] text-cyan-400 font-mono border border-cyan-500/10 shadow-lg">
-                                    F
-                                </kbd>
-                                <span className="text-[9px] text-slate-500 uppercase font-black tracking-widest">
-                                    Modo Foco
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => navigate('/player/character')}
-                                className="mt-2 px-4 py-2 bg-slate-800/60 hover:bg-slate-700/60 rounded-lg text-xs font-bold text-slate-300 transition-all"
-                            >
-                                ← Voltar
-                            </button>
-                        </div>
-                    </div>
+                <div className="fundamental-map-card">
+                    <h2 className="fundamental-map-card-title">Relatório de IA</h2>
+                    <p className="fundamental-map-text">"{aiState.response}"</p>
+                </div>
+
+                <div style={{ marginTop: 'auto' }}>
+                    <button
+                        onClick={() => navigate('/player/character')}
+                        className="fundamental-map-btn"
+                    >
+                        ← Voltar
+                    </button>
                 </div>
             </div>
 
-            <div className="flex-1 relative bg-[#020617] overflow-hidden">
+            <div className="fundamental-map-canvas-container">
                 <canvas
                     ref={canvasRef}
                     width={CANVAS_WIDTH}
                     height={CANVAS_HEIGHT}
-                    className="w-full h-full"
-                    style={{ display: 'block' }}
+                    className="fundamental-map-canvas"
                 />
             </div>
         </div>

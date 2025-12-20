@@ -29,6 +29,10 @@ import { QuizResultPage } from '../pages/Player/quizzes/QuizResultPage';
 import { AdminQuizzesPage } from '../pages/Admin/quizzes';
 import { AdminQuizCreateEditPage } from '../pages/Admin/quizzes/AdminQuizCreateEditPage';
 import { TowerExplorationPage } from '../pages/Tower/TowerExplorationPage';
+import { FundamentalMap1_1 } from '../pages/Tower/floors/FundamentalMap1_1';
+import { Andar01 } from '../pages/Tower/floors/andar01/Andar01';
+import { Andar02 } from '../pages/Tower/floors/andar02/Andar02';
+import { RoomInterior } from '../pages/Tower/rooms/RoomInterior';
 import { RoomContainer } from '../modules/tower/rooms/RoomContainer';
 import { ActivityContainer } from '../modules/tower/activities/ActivityContainer';
 import HiddenBattlePage from '../pages/HiddenBattle/HiddenBattlePage';
@@ -246,6 +250,38 @@ export function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <TowerExplorationPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/test/fundamental-map"
+                    element={
+                        <ProtectedRoute>
+                            <FundamentalMap1_1 />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/floor/andar01/:floorId"
+                    element={
+                        <ProtectedRoute>
+                            <Andar01 />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/floor/andar02/:floorId"
+                    element={
+                        <ProtectedRoute>
+                            <Andar02 />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/room/:roomId"
+                    element={
+                        <ProtectedRoute>
+                            <RoomInterior />
                         </ProtectedRoute>
                     }
                 />

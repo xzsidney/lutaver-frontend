@@ -45,7 +45,9 @@ export function PlayerDashboardPage() {
         const floor = getCharacterFloor();
         if (floor && character?.id) {
             localStorage.setItem('currentCharacterId', character.id);
-            navigate(`/tower/${floor.id}`);
+            // Redirecionar para o andar correto
+            const floorPath = floor.floorNumber === 1 ? 'andar01' : 'andar02';
+            navigate(`/floor/${floorPath}/${floor.id}`);
         }
     };
 
@@ -91,6 +93,20 @@ export function PlayerDashboardPage() {
                                 }}
                             >
                                 🏰 Explorar Torre
+                            </button>
+                            <button
+                                onClick={() => navigate('/test/fundamental-map')}
+                                className="btn"
+                                style={{
+                                    minWidth: '200px',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    backgroundColor: '#22c55e',
+                                    color: 'white',
+                                    border: 'none'
+                                }}
+                            >
+                                🧪 Fundamental 1-1 (Teste)
                             </button>
                             {getCharacterFloor() && (
                                 <div className="badge bg-light text-dark border px-3 py-2" style={{ fontSize: '14px' }}>

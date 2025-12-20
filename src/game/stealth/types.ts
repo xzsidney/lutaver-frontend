@@ -44,3 +44,23 @@ export interface RadioMessage {
     text: string;
     type: 'info' | 'alert' | 'success';
 }
+
+export interface RoomAction {
+    label: string;
+    icon: string;
+    command: string;
+}
+
+export interface RoomDetails {
+    image: string;
+    info: string;
+}
+
+export interface TowerRoom extends Rect {
+    id: string;
+    name: string;
+    color: string;
+    description: string;
+    actions?: RoomAction[];
+    details: RoomDetails;
+}
